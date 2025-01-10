@@ -23,7 +23,7 @@ const EmptyChat: React.FC = () => {
                             How can <span className="text-brand-600 font-bold inline">We</span> help you?
                         </h1>
                         <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
-                            Orchestrate a hive mind of DeFi Agents to act on Solana
+                            Orchestrate a like mind of DeFi Agents to act on Solana
                         </p>
                     </div>
                 </div>

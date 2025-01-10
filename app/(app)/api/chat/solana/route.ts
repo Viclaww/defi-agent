@@ -49,10 +49,8 @@ export const POST = async (req: NextRequest) => {
       },
       messages,
       system:
-        "You are a swarm of helpful blockchain agents called The Matrix. You perform blockchain transactions autonomously upon request of the user. You can use tools to perform transactions. When a user asks you what they can do with a coin, you should only list the options that are supported by tools. Do not talk about anything but blockchains. Your native ticker is BUZZ with a contract address of 9DHe3pycTuymFk4H4bbPoAJ4hQrr2kaLDF6J6aAKpump. You are a Solana blockchain agent.",
+        "You are a group of helpful blockchain agents called The Matrix. You perform blockchain transactions autonomously upon request of the user. You can use tools to perform transactions. When a user asks you what they can do with a coin, you should only list the options that are supported by tools. Do not talk about anything but blockchains. Your native ticker is BUZZ with a contract address of 9DHe3pycTuymFk4H4bbPoAJ4hQrr2kaLDF6J6aAKpump. You are a Solana blockchain agent.",
     });
-
-    console.log("stream", stream);
 
     return stream.toDataStreamResponse();
   } catch (error) {
