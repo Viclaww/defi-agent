@@ -6,12 +6,21 @@ import { useLogin, usePrivy } from '@privy-io/react-auth';
 import { Button } from '@/components/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 
 const LoginButton: React.FC = () => {
 
     const router = useRouter();
 
     const { authenticated } = usePrivy();
+      const { open, close } = useAppKit();
+        const {
+          address,
+          isConnected,
+          caipAddress,
+          status,
+          embeddedWalletInfo,
+        } = useAppKitAccount();
 
     const { login } = useLogin({
         onComplete: (_, __, wasAlreadyAuthenticated) => {
@@ -21,7 +30,7 @@ const LoginButton: React.FC = () => {
         }
     });
 
-    if (authenticated) return (
+    if (isConnected) return (
         <Link href="/chat">
             <Button variant={'brand'}>
                 Get Started
@@ -32,8 +41,8 @@ const LoginButton: React.FC = () => {
     return (
         <Button
             variant={'brand'}
-            onClick={() => login()}
-            disabled={authenticated}
+            onClick={() => open()}
+            disabled={isConnected}
         >
             Login
         </Button>
