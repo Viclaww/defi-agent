@@ -1,43 +1,29 @@
-'use client'
+"use client";
 
-import React from 'react'
+import React from "react";
 
-import { useLogin, usePrivy } from '@privy-io/react-auth';
-import { Button } from '@/components/ui';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui";
+import Link from "next/link";
+
+import { useAppKit } from "@reown/appkit/react";
 
 const LoginButton: React.FC = () => {
+  const { open } = useAppKit();
+  
+  const { isConnected } = useAppKitAccount();
 
-    const router = useRouter();
-
-    const { authenticated } = usePrivy();
-
-    const { login } = useLogin({
-        onComplete: (_, __, wasAlreadyAuthenticated) => {
-            if (!wasAlreadyAuthenticated) {
-                router.replace('/chat');
-            }
-        }
-    });
-
-    if (authenticated) return (
-        <Link href="/chat">
-            <Button variant={'brand'}>
-                Get Started
-            </Button>
-        </Link>
+  if (isConnected)
+    return (
+      <Link href="/chat">
+        <Button variant={"brand"}>Get Started</Button>
+      </Link>
     );
 
-    return (
-        <Button
-            variant={'brand'}
-            onClick={() => login()}
-            disabled={authenticated}
-        >
-            Login
-        </Button>
-    )
-}
+  return (
+    <Button variant={"brand"} onClick={() => open()} disabled={isConnected}>
+      Login
+    </Button>
+  );
+};
 
 export default LoginButton;

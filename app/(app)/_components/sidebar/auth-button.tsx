@@ -2,9 +2,9 @@
 
 import React from 'react'
 
-import { ChevronsUpDown, Coins, LogIn, LogOut, Wallet } from 'lucide-react';
+import { ChevronsUpDown,  LogIn, LogOut, Wallet } from 'lucide-react';
 
-import { useLogin } from '@/hooks';
+
 
 import {
     SidebarMenu,
@@ -15,29 +15,34 @@ import {
     DropdownMenuContent,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuGroup,
     DropdownMenuItem,
     useSidebar,
     Skeleton,
 } from '@/components/ui';
 
+import { useAppKit, useDisconnect } from "@reown/appkit/react";
 import { truncateAddress } from '@/lib/wallet';
 import Balances from './balances';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 const AuthButton: React.FC = () => {
 
-    const { user, ready, login, logout, fundWallet } = useLogin();
+      const { open } = useAppKit();
+      const { disconnect } = useDisconnect();
+
+     const { address, isConnected,  status} =
+       useAppKitAccount();
 
     const { isMobile } = useSidebar();
 
-    if (!ready) return <Skeleton className="w-full h-8" />;
+    if (status == "connecting" || status == "reconnecting") return <Skeleton className="w-full h-8" />;
 
-    if (!user || !user.wallet) return (
+    if (!isConnected || !address) return (
         <SidebarMenu>
             <SidebarMenuItem>
                 <SidebarMenuButton 
                     variant="brandOutline"
-                    onClick={() => login()}
+                    onClick={() => open()}
                     className="w-full justify-center gap-0"
                 >
                     <LogIn className="h-4 w-4" />
@@ -60,7 +65,7 @@ const AuthButton: React.FC = () => {
                         >
                             <Wallet className="size-8" />
                             <span className="ml-2">
-                                {truncateAddress(user.wallet.address)}
+                                {truncateAddress(address)}
                             </span>
                         <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
@@ -75,21 +80,21 @@ const AuthButton: React.FC = () => {
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                 <Wallet className="size-4" />
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">{truncateAddress(user.wallet.address)}</span>
+                                    <span className="truncate font-semibold">{truncateAddress(address)}</span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <Balances address={user.wallet.address} />
+                        <Balances address={address} />
                         <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => fundWallet(user.wallet!.address, { amount: "0.01" })}>
+                        {/* <DropdownMenuGroup>
+                            <DropdownMenuItem onClick={() => fundWallet(address, { amount: "0.01" })}>
                                 <Coins className="size-4" />
                                 Fund Wallet
                             </DropdownMenuItem>
-                        </DropdownMenuGroup>
+                        </DropdownMenuGroup> */}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => logout()}>
+                        <DropdownMenuItem onClick={() => disconnect()}>
                             <LogOut />
                             Log out
                         </DropdownMenuItem>
