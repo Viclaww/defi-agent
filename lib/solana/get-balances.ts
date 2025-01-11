@@ -16,11 +16,14 @@ export const getBalances = async (address: string): Promise<TokenAccountsRespons
         }),
     });
 
+    
+
     if (!response.ok) {
         throw new Error('Failed to fetch token accounts');
     }
 
     const data = await response.json();
+    console.log("response", data , response)
 
     return data.result;
 }

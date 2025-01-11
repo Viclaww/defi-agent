@@ -32,23 +32,23 @@ export const POST = async (
 ) => {
   const { chatId } = await params;
 
-  const { messages, body } = await req.json();
+  const { messages, id } = await req.json();
 
   try {
-    const chat = await getChat(chatId, body.id);
+    const chat = await getChat(chatId, id);
 
     if (!chat) {
       return NextResponse.json(
         await addChat({
           id: chatId,
-          userId: body.id,
+          userId: id,
           messages,
           tagline: await generateTagline(messages),
         })
       );
     } else {
       return NextResponse.json(
-        await updateChatMessages(chatId, body.id, messages)
+        await updateChatMessages(chatId, id, messages)
       );
     }
   } catch (error) {

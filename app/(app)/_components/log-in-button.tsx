@@ -8,7 +8,7 @@ import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 import { useAppKitWallet } from "@reown/appkit-wallet-button/react";
 
 interface Props {
-  onComplete: () => void;
+  onComplete?: () => void;
 }
 
 const LogInButton: React.FC<Props> = ({ onComplete }) => {
@@ -18,7 +18,7 @@ const LogInButton: React.FC<Props> = ({ onComplete }) => {
 
   useEffect(() => {
     if (isReady) {
-      onComplete();
+    onComplete &&  onComplete();
     }
   }, [isReady, onComplete]);
   return (

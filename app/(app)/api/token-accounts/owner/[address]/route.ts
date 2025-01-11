@@ -1,18 +1,20 @@
 import { NextResponse } from 'next/server';
 
-import { getTokenDataByAddress, getBalances } from '@/lib/solana';
+import { getTokenDataByAddress } from '@/lib/solana';
+import { getTokenAccounts } from '@/lib/solana/getBalances';
+import { PublicKey } from '@solana/web3.js';
 
 export const GET = async (request: Request, { params }: { params: Promise<{ address: string }> }) => {
     try {
         const { address } = await params;
-
-        const tokenAccounts = await getBalances(address);
-
-        const tokenDatas = await Promise.all(tokenAccounts.token_accounts.map(async (tokenAccount) => {
+    
+        const tokenAccounts = await getTokenAccounts((new PublicKey(address)).toString());
+        console.log(tokenAccounts)
+        const tokenDatas = await Promise.all(tokenAccounts.map(async (tokenAccount) => {
             return getTokenDataByAddress(tokenAccount.mint);
         }));
 
-        return NextResponse.json(tokenAccounts.token_accounts.map((tokenAccount, index) => {
+        return NextResponse.json(tokenAccounts.map((tokenAccount, index) => {
             return {
                 ...tokenAccount,
                 token_data: tokenDatas[index]

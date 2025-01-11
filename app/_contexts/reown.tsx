@@ -26,17 +26,17 @@ const solanaWeb3JsAdapter = new SolanaAdapter({
 
 // Set up metadata
 const metadata = {
-  name: "Victor Lawrence",
-  description: "AppKit Example",
+  name: "Matrix",
+  description: "Bounty Example",
   url: "https://reown.com/appkit", // origin must match your domain & subdomain
   icons: ["https://assets.reown.com/reown-profile-pic.png"],
 };
 
 // Create the modal
 export const modal = createAppKit({
-  adapters: [wagmiAdapter, solanaWeb3JsAdapter],
+  adapters: [solanaWeb3JsAdapter],
   projectId,
-  networks: [ solana, solanaTestnet, solanaDevnet],
+  networks: [solanaDevnet],
   defaultNetwork: solanaDevnet,
   metadata: metadata,
   features: {
