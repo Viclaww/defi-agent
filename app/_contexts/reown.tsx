@@ -29,15 +29,15 @@ const metadata = {
   name: "Matrix",
   description: "Bounty Example",
   url: "https://reown.com/appkit", // origin must match your domain & subdomain
-  icons: ["https://assets.reown.com/reown-profile-pic.png"],
+  icons: ["/matrix.png"],
 };
 
 // Create the modal
 export const modal = createAppKit({
   adapters: [solanaWeb3JsAdapter],
   projectId,
-  networks: [solanaDevnet],
-  defaultNetwork: solanaDevnet,
+  networks: [solana, solanaDevnet],
+  defaultNetwork: process.env.NEXT_ENV !=="development" ? solana : solanaDevnet,
   metadata: metadata,
   features: {
     socials: [
