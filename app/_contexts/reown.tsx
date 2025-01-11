@@ -2,10 +2,10 @@
 "use client";
 import { SolanaAdapter } from "@reown/appkit-adapter-solana";
 import { solana, solanaTestnet, solanaDevnet } from "@reown/appkit/networks";
-import { wagmiAdapter, projectId } from "../../config/reown";
+import { wagmiAdapter, projectId } from "../../services/reown";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createAppKit } from "@reown/appkit/react";
-import { mainnet, arbitrum } from "@reown/appkit/networks";
+
 import React, { type ReactNode } from "react";
 import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
 import {
@@ -33,11 +33,11 @@ const metadata = {
 };
 
 // Create the modal
-const modal = createAppKit({
+export const modal = createAppKit({
   adapters: [wagmiAdapter, solanaWeb3JsAdapter],
   projectId,
-  networks: [mainnet, arbitrum, solana, solanaTestnet, solanaDevnet],
-  defaultNetwork: mainnet,
+  networks: [ solana, solanaTestnet, solanaDevnet],
+  defaultNetwork: solanaDevnet,
   metadata: metadata,
   features: {
     socials: [
@@ -55,10 +55,10 @@ const modal = createAppKit({
 
 function ReownProvider({
   children,
-  cookies = null,
+
 }: {
   children: ReactNode;
-  cookies: string | null;
+  cookies?: string | null;
 }) {
   const initialState = cookieToInitialState(
     wagmiAdapter.wagmiConfig as Config,

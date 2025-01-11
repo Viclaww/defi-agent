@@ -4,7 +4,7 @@ import { DM_Sans, DM_Mono } from "next/font/google";
 
 import "./globals.css";
 import Providers from "./_contexts";
-import { headers } from "next/headers";
+
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -28,11 +28,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookies = headers().then((headers) => headers.get("cookie"));
+
   return (
     <html lang="en" className="dark">
       <body className={`${dmSans.variable} ${dmMono.variable} antialiased  `}>
-        <Providers cookies={cookies}>{children}</Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

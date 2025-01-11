@@ -4,20 +4,20 @@ import { useState } from "react";
 
 import { VersionedTransaction } from "@solana/web3.js";
 
-import { useSolanaWallets } from "@privy-io/react-auth/solana";
-
 import { useChat } from "../../_contexts/chat";
 
 import { useTokenDataByAddress, useSwapData } from "@/hooks";
 
 import type { SolanaTradeArgumentsType } from "@/ai";
-import { useSendTransaction } from "@/hooks/privy";
+import { useSendTransaction } from "@/hooks/reown";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export const useSwap = (toolCallId: string, args: SolanaTradeArgumentsType, userPublicKey: string) => {
 
     const { addToolResult } = useChat();
 
-    const { wallets } = useSolanaWallets();
+     const { address } =
+          useAppKitAccount();
 
     const { sendTransaction } = useSendTransaction();
 
@@ -37,7 +37,7 @@ export const useSwap = (toolCallId: string, args: SolanaTradeArgumentsType, user
 
     const onSwap = async () => {
 
-        if (!wallets.length) return;
+        if (!address) return;
 
         if (!swapData) return;
 

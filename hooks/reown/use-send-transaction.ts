@@ -1,7 +1,7 @@
 import { Connection, VersionedTransaction } from "@solana/web3.js";
 
-import { type Provider, useAppKitConnection } from "@reown/appkit-adapter-solana/react";
-import { useAppKitAccount, useAppKitProvider, useWalletInfo } from "@reown/appkit/react";
+import { type Provider } from "@reown/appkit-adapter-solana/react";
+import { useAppKitAccount, useAppKitProvider} from "@reown/appkit/react";
 export const useSendTransaction = () => {
 
 

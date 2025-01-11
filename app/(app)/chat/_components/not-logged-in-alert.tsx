@@ -2,8 +2,6 @@
 
 import React from 'react'
 
-import { usePrivy } from '@privy-io/react-auth';
-
 import { 
     AlertDialog, 
     AlertDialogContent, 
@@ -15,15 +13,17 @@ import {
 
 import LoginButton from '@/app/_components/login-button';
 import { useExperimentalConfirmed } from '../../_hooks';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 const NotLoggedInAlert: React.FC = () => {
 
-    const { ready, user } = usePrivy();
+   
+      const {  isConnected } = useAppKitAccount();
 
     const { confirmed } = useExperimentalConfirmed();
 
     return (
-        <AlertDialog open={ready && !user && confirmed}>
+        <AlertDialog open={ !isConnected && confirmed}>
             <AlertDialogHeader className="hidden">
                 <AlertDialogTitle>You are not logged in</AlertDialogTitle>
                 <AlertDialogDescription>Please login to continue</AlertDialogDescription>

@@ -4,9 +4,9 @@ import React, { createContext, useContext, ReactNode, useState, useEffect } from
 
 import { Message, useChat as useAiChat } from 'ai/react';
 import { Models } from '@/types/models';
-import { usePrivy } from '@privy-io/react-auth';
 import { generateId } from 'ai';
 import { useUserChats } from '@/hooks';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 export enum ColorMode {
     LIGHT = 'light',
@@ -57,7 +57,7 @@ interface ChatProviderProps {
 
 export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
 
-    const { user, getAccessToken } = usePrivy();
+    const { isConnected, address } = useAppKitAccount();
 
     const [chatId, setChatId] = useState<string>(generateId());
     const [isResponseLoading, setIsResponseLoading] = useState(false);
@@ -67,11 +67,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
 
     const setChat = async (chatId: string) => {
         setChatId(chatId);
-        const chat = await fetch(`/api/chats/${chatId}`, {
-            headers: {
-                Authorization: `Bearer ${await getAccessToken()}`,
-            },
-        });
+        const chat = await fetch(`/api/chats/${chatId}`);
         const chatData = await chat.json();
         if (chatData) {
             setMessages(chatData.messages);
@@ -92,21 +88,19 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         body: {
             model,
             modelName: model,
-            userId: user?.id,
+            id: address,
             chatId,
         },
     });
 
     useEffect(() => {
         const updateChat = async () => {
-            if(messages.length > 0 && !isLoading) {
+            if(messages.length > 0 && isConnected && !isLoading) {
                 const response = await fetch(`/api/chats/${chatId}`, {
                     method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${await getAccessToken()}`,
-                    },
+
                     body: JSON.stringify({
-                        messages,
+                        messages, id: address,
                     }),
                 });
                 const data = await response.json();
@@ -117,7 +111,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         };
 
         updateChat();
-    }, [isLoading]);
+    }, [address, chatId, isConnected, isLoading, messages, mutate]);
 
     const onSubmit = async () => {
         if (!input.trim()) return;

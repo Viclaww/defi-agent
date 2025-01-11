@@ -5,7 +5,7 @@ import React from "react";
 import { Button } from "@/components/ui";
 import Link from "next/link";
 
-import { useAppKit } from "@reown/appkit/react";
+import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 
 const LoginButton: React.FC = () => {
   const { open } = useAppKit();

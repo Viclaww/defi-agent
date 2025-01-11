@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { addChat, getChat, updateChatMessages } from "@/db/services";
 
-import { privy } from "@/services/privy";
 import { generateText } from "ai";
 import { Message } from "ai";
 import { openai } from "@ai-sdk/openai";
@@ -14,22 +13,13 @@ export const GET = async (
   const { chatId } = await params;
 
   try {
-    // Get the authorization header
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(null, { status: 401 });
-    }
+    const body = await req.json();
 
-    // Extract the token
-    const token = authHeader.split(" ")[1];
-
-    // Verify the token with Privy
-    const { userId } = await privy.verifyAuthToken(token);
-    if (!userId) {
+    if (!body.id) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    return NextResponse.json(await getChat(chatId, userId));
+    return NextResponse.json(await getChat(chatId, body.id));
   } catch (error) {
     console.error("Error in /api/chats/[chatId]:", error);
     return NextResponse.json(null, { status: 500 });
@@ -42,38 +32,23 @@ export const POST = async (
 ) => {
   const { chatId } = await params;
 
-  const { messages } = await req.json();
+  const { messages, body } = await req.json();
 
   try {
-    // Get the authorization header
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(false, { status: 401 });
-    }
-
-    // Extract the token
-    const token = authHeader.split(" ")[1];
-
-    // Verify the token with Privy
-    const { userId } = await privy.verifyAuthToken(token);
-    if (!userId) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-    }
-
-    const chat = await getChat(chatId, userId);
+    const chat = await getChat(chatId, body.id);
 
     if (!chat) {
       return NextResponse.json(
         await addChat({
           id: chatId,
-          userId,
+          userId: body.id,
           messages,
           tagline: await generateTagline(messages),
         })
       );
     } else {
       return NextResponse.json(
-        await updateChatMessages(chatId, userId, messages)
+        await updateChatMessages(chatId, body.id, messages)
       );
     }
   } catch (error) {

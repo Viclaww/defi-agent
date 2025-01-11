@@ -4,7 +4,6 @@ import React from 'react'
 
 import Link from 'next/link';
 
-import { usePrivy } from '@privy-io/react-auth';
 
 import { 
     SidebarGroup, 
@@ -21,10 +20,13 @@ import {
 import { useUserChats } from '@/hooks';
 
 import { useChat } from '../../chat/_contexts/chat';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 const ChatsGroup: React.FC = () => {
 
-    const { ready, user } = usePrivy();
+    
+      const { address, isConnected} =
+        useAppKitAccount();
 
     const { chats, isLoading } = useUserChats();
 
@@ -48,7 +50,7 @@ const ChatsGroup: React.FC = () => {
             </div>
             <SidebarGroupContent>
                 {
-                    isLoading || !ready ? (
+                    isLoading || !isConnected ? (
                         <Skeleton className="h-10 w-full" />
                     ) : (
                         chats.length > 0 ? (
@@ -74,7 +76,7 @@ const ChatsGroup: React.FC = () => {
                                 }
                             </SidebarMenu>
                         ) : (
-                            user ? (
+                        address ? (
                                 <p className='text-sm text-neutral-500 dark:text-neutral-400 pl-2'>
                                     No chats found
                                 </p>

@@ -4,26 +4,23 @@ import React, { useEffect } from "react";
 
 import { Button } from "@/components/ui";
 
-import { Wallet } from "@privy-io/react-auth";
 import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 import { useAppKitWallet } from "@reown/appkit-wallet-button/react";
 
 interface Props {
-  onComplete?: (wallet?: Wallet) => void;
+  onComplete: () => void;
 }
 
 const LogInButton: React.FC<Props> = ({ onComplete }) => {
-;
+  const { open } = useAppKit();
+  const { isReady, connect } = useAppKitWallet();
+  const { isConnected } = useAppKitAccount();
 
- const { open } = useAppKit();
-const { isReady, connect } = useAppKitWallet();
-  const {  isConnected } =useAppKitAccount();
-
-    useEffect(() => {
-      if(isReady){
-      onComplete &&  onComplete();
-      }
-    }, [isReady]);
+  useEffect(() => {
+    if (isReady) {
+      onComplete();
+    }
+  }, [isReady, onComplete]);
   return (
     <Button
       variant="brand"
@@ -31,7 +28,7 @@ const { isReady, connect } = useAppKitWallet();
         if (isConnected) {
           connect("phantom");
         } else {
-         open()
+          open();
         }
       }}
       className="w-full"

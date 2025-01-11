@@ -4,20 +4,21 @@ import { useState } from "react";
 
 import { VersionedTransaction } from "@solana/web3.js";
 
-import { useSolanaWallets } from "@privy-io/react-auth/solana";
 
 import { useChat } from "../../_contexts/chat";
 
 import { useNativeBalance, useStakeData, useTokenAccounts, useTokenDataByAddress } from "@/hooks";
 
 import type { StakeArgumentsType } from "@/ai";
-import { useSendTransaction } from "@/hooks/privy";
+import { useSendTransaction } from "@/hooks/reown";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export const useStake = (toolCallId: string, args: StakeArgumentsType, userPublicKey: string) => {
 
     const { addToolResult } = useChat();
 
-    const { wallets } = useSolanaWallets();
+   const { address } =
+        useAppKitAccount();
 
     const [isStaking, setIsStaking] = useState(false);
 
@@ -38,7 +39,7 @@ export const useStake = (toolCallId: string, args: StakeArgumentsType, userPubli
 
     const onStake = async () => {
 
-        if (!wallets.length) return;
+        if (!address) return;
 
         setIsStaking(true);
 

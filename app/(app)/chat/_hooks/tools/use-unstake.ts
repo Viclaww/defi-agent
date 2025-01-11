@@ -4,20 +4,22 @@ import { useState } from "react";
 
 import { VersionedTransaction } from "@solana/web3.js";
 
-import { useSolanaWallets } from "@privy-io/react-auth/solana";
 
 import { useChat } from "../../_contexts/chat";
 
 import { useTokenDataByAddress, useUnstakeData } from "@/hooks";
 
 import type { UnstakeArgumentsType } from "@/ai";
-import { useSendTransaction } from "@/hooks/privy";
+import { useSendTransaction } from "@/hooks/reown";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export const useUnstake = (toolCallId: string, args: UnstakeArgumentsType, userPublicKey: string) => {
 
     const { addToolResult } = useChat();
 
-    const { wallets } = useSolanaWallets();
+
+       const { address } =
+            useAppKitAccount();
 
     const { sendTransaction } = useSendTransaction();
 
@@ -36,7 +38,7 @@ export const useUnstake = (toolCallId: string, args: UnstakeArgumentsType, userP
 
     const onUnstake = async () => {
 
-        if (!wallets.length) return;
+        if (!address) return;
 
         setIsUnstaking(true);
 

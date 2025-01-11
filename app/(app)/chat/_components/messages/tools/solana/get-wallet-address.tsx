@@ -4,12 +4,13 @@ import LoginButton from '@/app/(app)/_components/log-in-button';
 
 import ToolCard from '../tool-card';
 
-import { useSolanaWallets, Wallet } from '@privy-io/react-auth';
 
 import { useChat } from '@/app/(app)/chat/_contexts/chat';
 
 import type { ToolInvocation } from 'ai';
 import type { GetWalletAddressResultType } from '@/ai';
+import { useAppKitAccount } from '@reown/appkit/react';
+
 
 interface Props {
     tool: ToolInvocation
@@ -36,24 +37,25 @@ const GetWalletAddressAction = ({ toolCallId }: { toolCallId: string }) => {
 
     const { addToolResult } = useChat();
 
-    const { wallets } = useSolanaWallets();
+    const { address } = useAppKitAccount()
 
     useEffect(() => {
-        if(wallets.length) {
+        if(address) {
             addToolResult(toolCallId, {
                 message: "Wallet connected",
                 body: {
-                    address: wallets[0].address
+                    address: address
                 }
             });
         }
-    }, [wallets]);
+    }, [address]);
 
-    const onComplete = (wallet: Wallet) => {
+    const onComplete = () => {
+        if (!address) return;
         addToolResult(toolCallId, {
             message: "Wallet connected",
             body: {
-                address: wallet.address
+                address: address
             }
         });
     }

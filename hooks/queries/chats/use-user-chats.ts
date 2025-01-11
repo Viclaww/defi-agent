@@ -1,24 +1,24 @@
 import useSWR from "swr";
-import { usePrivy } from "@privy-io/react-auth";
 
 import type { Chat } from "@/db/types";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export const useUserChats = () => {
-    const { getAccessToken } = usePrivy();
+ 
+     const {  isConnected, address } =
+       useAppKitAccount();
 
     const { data, isLoading, error, mutate } = useSWR<Chat[]>(
-        "/api/chats",
+       ` /api/chats?userId=${address}`,
         async (route: string) => {
-            const accessToken = await getAccessToken();
-            if (!accessToken) {
+        
+            if (!isConnected) {
                 throw new Error("Not authenticated");
             }
-            
+
             return fetch(route, {
                 cache: "no-cache",
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
+                
             }).then(res => res.json());
         },
     );
