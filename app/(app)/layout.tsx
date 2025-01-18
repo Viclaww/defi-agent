@@ -6,6 +6,7 @@ import Sidebar from './_components/sidebar';
 import ExperimentalAlertDialog from './_components/experimental-alert-dialog';
 
 import { ChatProvider } from './chat/_contexts/chat';
+import Web3InboxAlertDialog from './_components/subscribe-to-notifications';
 
 interface Props {
     children: React.ReactNode;
@@ -14,6 +15,7 @@ interface Props {
 const Layout: React.FC<Props> = ({ children }) => {
     return (
         <SidebarProvider>
+            <Web3InboxAlertDialog />
             <ExperimentalAlertDialog />
             <ChatProvider>
                 <Sidebar>

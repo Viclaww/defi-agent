@@ -4,6 +4,7 @@ import { DM_Sans, DM_Mono } from "next/font/google";
 
 import "./globals.css";
 import Providers from "./_contexts";
+import "@/services/web3inbox";
 
 
 const dmSans = DM_Sans({
